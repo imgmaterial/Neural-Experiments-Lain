@@ -54,6 +54,8 @@ Takes a username as an input, returns all of the ratings by this user JSON forma
 
 /rec
 
+GET
+
 Takes a username as an input, returns a JSON with 10 anime recomendations with the anime id, its name and predicted user rating.
 
 ![image](https://user-images.githubusercontent.com/59793640/183621169-24239c91-c52a-4eb5-90b0-ca2346f4f468.png)

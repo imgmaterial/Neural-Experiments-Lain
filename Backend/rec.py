@@ -6,10 +6,10 @@ import pandas as pd
 from mysqlconnect import mysqlkey
 
 mydb = mysql.connector.connect(
-  host=mysqlkey["host"],
-  user=mysqlkey["user"],
-  password=mysqlkey["password"],
-  database=mysqlkey["database"]
+  host=mysqlkey("host"),
+  user=mysqlkey("user"),
+  password=mysqlkey("password"),
+  database=mysqlkey("database")
 )
 mycursor = mydb.cursor()
 

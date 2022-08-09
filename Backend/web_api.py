@@ -10,10 +10,10 @@ mysql = MySQL()
 api = Api(app)
 CORS(app)
 
-app.config['MYSQL_DATABASE_USER'] = mysqlkey["user"]
-app.config['MYSQL_DATABASE_PASSWORD'] = mysqlkey["password"]
-app.config['MYSQL_DATABASE_DB'] = mysqlkey["database"]
-app.config['MYSQL_DATABASE_HOST'] = mysqlkey["host"]
+app.config['MYSQL_DATABASE_USER'] = mysqlkey("user")
+app.config['MYSQL_DATABASE_PASSWORD'] = mysqlkey("password")
+app.config['MYSQL_DATABASE_DB'] = mysqlkey("database")
+app.config['MYSQL_DATABASE_HOST'] = mysqlkey("host")
 
 mysql.init_app(app)
 

@@ -51,6 +51,18 @@ class user_rate_list(Resource):
         cursor.execute(sql_command, (str(_user)))
         rows = cursor.fetchall()
         return jsonify(rows)
+    def put(self):
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        _user = request.form['user']
+        _animeid = request.form['animeid']
+        _rating = request.form['rating']
+        set_user_cmd = "UPDATE anime_lists SET rating = %s WHERE user = %s and animeid = %s"
+        cursor.execute(set_user_cmd,(_rating,_user,_animeid))
+        response = jsonify(_user,_animeid,_rating)
+        response.status_code = 200
+        return response
+
         
 
 

@@ -30,7 +30,8 @@ Takes no input, returns entries of every user in JSON format with user name, ani
 
 ![image](https://user-images.githubusercontent.com/59793640/183617083-cd800902-9857-4a8f-957b-9748603a767c.png)
 
-![image](https://user-images.githubusercontent.com/59793640/183617641-6909bf63-83f0-4c54-9a90-8493f3dafd9e.png)
+![image](https://user-images.githubusercontent.com/59793640/187989969-525b3562-9f5f-43e7-9117-b6433ad0051f.png)
+
 
 POST
 
@@ -50,7 +51,8 @@ Takes a username as an input, returns all of the ratings by this user JSON forma
 
 ![image](https://user-images.githubusercontent.com/59793640/183620266-5665662f-ae13-499d-916d-b9785a52723d.png)
 
-![image](https://user-images.githubusercontent.com/59793640/183620372-c451abed-d354-482b-9bc9-dbc75ed95c30.png)
+![image](https://user-images.githubusercontent.com/59793640/187990189-aa6291b9-f1f9-4315-9e4c-65dcec4bcb6b.png)
+
 
 /rec
 
@@ -60,7 +62,8 @@ Takes a username as an input, returns a JSON with 10 anime recomendations with t
 
 ![image](https://user-images.githubusercontent.com/59793640/183621169-24239c91-c52a-4eb5-90b0-ca2346f4f468.png)
 
-![image](https://user-images.githubusercontent.com/59793640/183621253-c2432ba3-0410-4455-afae-ec9af213443d.png)
+![image](https://user-images.githubusercontent.com/59793640/187990309-6377bd41-21fa-42a3-9fb2-c629ffb271e8.png)
+
 
 
 

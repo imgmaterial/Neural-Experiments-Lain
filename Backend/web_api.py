@@ -1,9 +1,11 @@
+from urllib import response
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
 from flaskext.mysql import MySQL
 from flask_cors import CORS
 import scrape
 from mysqlconnect import mysqlkey
+import json
 
 app = Flask(__name__)
 mysql = MySQL()
@@ -21,9 +23,16 @@ class Users(Resource):
     def get(self):
         conn = mysql.connect()
         cursor = conn.cursor()
-        cursor.execute("""select * from anime_lists""")
+        cursor.execute("""select distinct(user) from anime_lists""")
         rows = cursor.fetchall()
-        return jsonify(rows)
+        rows = list(rows)
+        user_list = []
+        for i in rows:
+            i = str(i[0])
+            user = {"user_name": i}
+            user_list.append(user)
+        response = user_list
+        return response
 
 
     def post(self):
@@ -50,7 +59,15 @@ class user_rate_list(Resource):
         sql_command = "select * from anime_lists WHERE user in (%s)"
         cursor.execute(sql_command, (str(_user)))
         rows = cursor.fetchall()
-        return jsonify(rows)
+        rows = list(rows)
+        rate_list = []
+        for i in rows:
+            i = list(i)
+            user_rates = {"animeid": i[1], "rating": i[2]}
+            rate_list.append(user_rates)
+        response = {"user": str(_user), "titles": rate_list}
+        return response
+
     def put(self):
         conn = mysql.connect()
         cursor = conn.cursor()
@@ -71,7 +88,14 @@ class Recommender(Resource):
     def get(self):
         _user = request.args.get("user")
         recomends = scrape.translate(_user)
-        return jsonify(recomends)
+        recomends = list(recomends)
+        recommendation_list = []
+        for i in recomends:
+            i = list(i)
+            item = {"animeid":i[0], "anime_name":i[1], "rating":i[2]}
+            recommendation_list.append(item)
+        response = {"user":_user, "recommendations":recommendation_list}
+        return response
 
 
 

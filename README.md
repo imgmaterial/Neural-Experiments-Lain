@@ -2,7 +2,7 @@
 Collaborative learning based anime recommendation system.
 Project in early development stages.
 
-In order to launch the project make sure Python 3.10 is installed along with the libraries used by the project. All of the required libraries can be found in requirements.txt and installed py running:
+In order to launch the project make sure Python 3.10 is installed along with the libraries used by the project. All of the required libraries can be found in requirements.txt and installed by running:
 
 pip install -r requirements.txt
 

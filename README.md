@@ -2,25 +2,25 @@
 Collaborative learning based anime recommendation system.
 Project in early development stages.
 
-In order to launch the project make sure Python 3.10 is installed along with the libraries used by the project.
+In order to launch the project make sure Python 3.10 is installed along with the libraries used by the project. All of the required libraries can be found in requirements.txt and installed py running:
 
-Currently:
+pip install -r requirements.txt
 
-flask
-
-flask-restful
-
-flas_cors
-
-fastai
-
-pandas
-
-mysql.connector
 
 If all is installed launch web_api.py by running "python web_api.py" from directory.
 
 Currently working HTTP methods.
+
+/anime
+
+GET
+
+Takes in anime_id, returns a json with info about the anime.
+
+![image](https://user-images.githubusercontent.com/59793640/188739125-79af59d8-20ad-4a27-93d5-2aabc7e5a6c0.png)
+
+![image](https://user-images.githubusercontent.com/59793640/188739167-49b02de1-8339-4034-b919-7ecc8d0b252b.png)
+
 
 /users
 

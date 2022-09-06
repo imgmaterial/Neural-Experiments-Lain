@@ -3,9 +3,8 @@ from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
 from flaskext.mysql import MySQL
 from flask_cors import CORS
-import scrape
+import rec
 from mysqlconnect import mysqlkey
-import json
 
 app = Flask(__name__)
 mysql = MySQL()
@@ -18,6 +17,20 @@ app.config['MYSQL_DATABASE_DB'] = mysqlkey("database")
 app.config['MYSQL_DATABASE_HOST'] = mysqlkey("host")
 
 mysql.init_app(app)
+
+class Anime(Resource):
+    def get(self):
+        _anime_id = request.args.get("anime_id")
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        sql_command = "select * from anime_info WHERE anime_id in (%s)"
+        cursor.execute(sql_command, (_anime_id))
+        rows = cursor.fetchall()
+        rows = list(rows)[0]
+        response = {"anime_id":rows[0], "anime_name":rows[1], "anime_type":rows[2], "anime_score":rows[3]}
+        return response
+
+
 
 class Users(Resource):
     def get(self):
@@ -86,13 +99,18 @@ class user_rate_list(Resource):
 
 class Recommender(Resource):
     def get(self):
+        conn = mysql.connect()
+        cursor = conn.cursor()
         _user = request.args.get("user")
-        recomends = scrape.translate(_user)
+        recomends = rec.get_preds_for_user(_user)
         recomends = list(recomends)
         recommendation_list = []
         for i in recomends:
             i = list(i)
-            item = {"animeid":i[0], "anime_name":i[1], "rating":i[2]}
+            command = "select anime_name from anime_info where anime_id = %s"
+            cursor.execute(command,(i[0]))
+            rows = cursor.fetchall()
+            item = {"animeid":i[0], "anime_name":rows[0][0], "rating":i[1]}
             recommendation_list.append(item)
         response = {"user":_user, "recommendations":recommendation_list}
         return response
@@ -111,6 +129,7 @@ def hello_world():
 api.add_resource(Users,'/users')
 api.add_resource(Recommender,'/rec')
 api.add_resource(user_rate_list, '/rate')
+api.add_resource(Anime,'/anime')
 
 
 

@@ -1,3 +1,4 @@
+from urllib import response
 import requests
 
 headers = {"User-Agent": "Api Test"}
@@ -25,3 +26,8 @@ def get_user_id(username):
     data = {"is_nickname":1}
     response = requests.get(url,data=data, headers=headers)
     return response.json()['id']
+
+def get_anime_by_page(page_number):
+    url = "https://shikimori.one/api/animes?page="+page_number+"&limit=50&order=id"
+    response = requests.get(url, headers=headers)
+    return response.json()

@@ -1,5 +1,8 @@
 # Neural-Experiments-Lain
-Collaborative learning based anime recommendation system.
+Neural Experiments is an anime recommendation system based on collaborative learning for neural networks. The project relies on FastAIs implementation of collaborative learning model. For the user this means that the recommendations given by the neural network rely not on the contents or attributes of the recommended title but on the interactions of users that have shown to have a similar taste in anime as the user did. A preexisting data set of MyAnimeList user ratings was used to train the model and the model is continuously being trained as information is received from new users and new shows come out.
+
+In order to use the recommendation system the user needs to enter into the database a set of previously watched titles along with a rating on scale of 1-10.  Ability to authenticate through some of the already existing anime list sites would be implemented in the future to make the process smoother for users who already have a large collection of anime listed on a third party platform. The relevant information from the entries is then sent into our database for the model to further learn from them and the user will be able to request a list of 10 top recommendations from the neural networks perspective.
+
 Project in early development stages.
 
 In order to launch the project make sure Python 3.10 is installed along with the libraries used by the project. All of the required libraries can be found in requirements.txt and installed by running:

@@ -84,13 +84,13 @@ class user_rate_list(Resource):
     def put(self):
         conn = mysql.connect()
         cursor = conn.cursor()
-        _user = request.form['user']
-        _animeid = request.form['animeid']
-        _rating = request.form['rating']
-        set_user_cmd = "UPDATE anime_lists SET rating = %s WHERE user = %s and animeid = %s"
-        cursor.execute(set_user_cmd,(_rating,_user,_animeid))
-        response = jsonify(_user,_animeid,_rating)
-        response.status_code = 200
+        _user = request.args.get("user")
+        _animeid = request.args.get("animeid")
+        _rating = request.args.get("rating")
+        set_user_cmd = "UPDATE anime_lists SET rating = %s WHERE (user = %s and animeid = %s) limit 1"
+        cursor.execute(set_user_cmd,(int(_rating),str(_user),int(_animeid)))
+        conn.commit()
+        response = {"user":_user,"animeid":_animeid,"rating":_rating}
         return response
 
         

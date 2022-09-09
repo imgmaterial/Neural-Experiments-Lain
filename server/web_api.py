@@ -193,10 +193,6 @@ def hello_world():
 
 
 
-
-list = {}
-list("recomendations")
-
 api.add_resource(Users,'/users')
 api.add_resource(Recommender,'/rec')
 api.add_resource(user_rate_list, '/rate')

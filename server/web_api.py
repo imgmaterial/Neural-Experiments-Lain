@@ -4,12 +4,19 @@ from flask_restful import Resource, Api, reqparse
 from flaskext.mysql import MySQL
 from flask_cors import CORS
 import rec
-from mysqlconnect import mysqlkey
+from datetime import datetime, timedelta, timezone
+from mysqlconnect import mysqlkey, jwtsecret
+from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
+import json
 
 app = Flask(__name__)
 mysql = MySQL()
 api = Api(app)
 CORS(app)
+
+app.config["JWT_SECRET_KEY"] = jwtsecret()
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+jwt = JWTManager(app)
 
 app.config['MYSQL_DATABASE_USER'] = mysqlkey("user")
 app.config['MYSQL_DATABASE_PASSWORD'] = mysqlkey("password")
@@ -17,6 +24,23 @@ app.config['MYSQL_DATABASE_DB'] = mysqlkey("database")
 app.config['MYSQL_DATABASE_HOST'] = mysqlkey("host")
 
 mysql.init_app(app)
+
+@app.after_request
+def refresh_expiring_jwts(response):
+    try:
+        exp_timestamp = get_jwt()["exp"]
+        now = datetime.now(timezone.utc)
+        target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+        if target_timestamp > exp_timestamp:
+            access_token = create_access_token(identity=get_jwt_identity())
+            data = response.get_json()
+            if type(data) is dict:
+                data["access_token"] = access_token 
+                response.data = json.dumps(data)
+        return response
+    except (RuntimeError, KeyError):
+        return response
+
 
 class Anime(Resource):
     def get(self):
@@ -116,6 +140,52 @@ class Recommender(Resource):
         return response
 
 
+class token(Resource):
+    def get(self):
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        _email = request.args.get("email")
+        _password = request.args.get("password")
+        command = "select * from user_data where email = %s limit 1"
+        cursor.execute(command, (_email))
+        rows = list(cursor.fetchall())
+        if rows == [] or _password != rows[0][3]:
+            response = "Wrong email or password"
+            return response
+        access_token = create_access_token(identity=rows[0][1],)
+        response = {"access_token":access_token}
+        return response
+
+class logout(Resource):
+    def get(self):
+        response = "Logging out"
+        unset_jwt_cookies(response)
+        return response
+
+
+
+class registration(Resource):
+    def post(self):
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        _user_name = request.form['user_name']
+        _email = request.form['email']
+        _password = request.form['password']
+        rows = cursor.execute("select * from user_data where email = %s",(_email))
+        if rows != 0:
+            return "Email already in use"
+        rows = cursor.execute("select * from user_data where user_name = %s",(_user_name))
+        if rows != 0:
+            return "Username already in use"
+        insert_user_cmd = "INSERT INTO user_data(user_id, user_name, email, password) VALUES(%s, %s, %s, %s)"
+        cursor.execute("select max(user_id) from user_data")
+        _user_id = cursor.fetchone()
+        _user_id = _user_id[0] + 1
+        print(_user_id)
+        cursor.execute(insert_user_cmd, (_user_id, _user_name, _email,_password ))
+        response = {"user_id":_user_id}
+        return response
+
 
 @app.route("/")
 def hello_world():
@@ -124,16 +194,16 @@ def hello_world():
 
 
 
-
+list = {}
+list("recomendations")
 
 api.add_resource(Users,'/users')
 api.add_resource(Recommender,'/rec')
 api.add_resource(user_rate_list, '/rate')
 api.add_resource(Anime,'/anime')
-
-
-
-
+api.add_resource(token, '/token')
+api.add_resource(logout, '/logout')
+api.add_resource(registration, '/registration')
 
 
 

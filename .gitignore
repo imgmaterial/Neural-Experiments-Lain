@@ -1,0 +1,3 @@
+server/mysqlconnect.py
+server/__pycache__/
+.DS_Store

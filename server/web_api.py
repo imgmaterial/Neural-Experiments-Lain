@@ -42,7 +42,7 @@ def refresh_expiring_jwts(response):
         return response
 
 
-class Anime(Resource):
+class anime(Resource):
     def get(self):
         _anime_id = request.args.get("anime_id")
         conn = mysql.connect()
@@ -56,7 +56,7 @@ class Anime(Resource):
 
 
 
-class Users(Resource):
+class users(Resource):
     def get(self):
         conn = mysql.connect()
         cursor = conn.cursor()
@@ -70,22 +70,6 @@ class Users(Resource):
             user_list.append(user)
         response = user_list
         return response
-
-
-    def post(self):
-        conn = mysql.connect()
-        cursor = conn.cursor()
-        _user = request.form['user']
-        _animeid = request.form['animeid']
-        _rating = request.form['rating']
-        insert_user_cmd = """INSERT INTO anime_lists(user, animeid, rating) VALUES(%s, %s, %s)"""
-        cursor.execute(insert_user_cmd, (_user, _animeid, _rating))
-        conn.commit()
-        response = jsonify(message='User added successfully.', id=cursor.lastrowid)
-        response.status_code = 200
-        cursor.close()
-        conn.close()
-        return(response)
     
 class user_rate_list(Resource):
     def get(self):
@@ -105,6 +89,21 @@ class user_rate_list(Resource):
         response = {"user": str(_user), "titles": rate_list}
         return response
 
+    def post(self):
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        _user = request.form['user']
+        _animeid = request.form['animeid']
+        _rating = request.form['rating']
+        insert_user_cmd = """INSERT INTO anime_lists(user, animeid, rating) VALUES(%s, %s, %s)"""
+        cursor.execute(insert_user_cmd, (_user, _animeid, _rating))
+        conn.commit()
+        response = jsonify(message='User added successfully.', id=cursor.lastrowid)
+        response.status_code = 200
+        cursor.close()
+        conn.close()
+        return(response)
+
     def put(self):
         conn = mysql.connect()
         cursor = conn.cursor()
@@ -117,11 +116,22 @@ class user_rate_list(Resource):
         response = {"user":_user,"animeid":_animeid,"rating":_rating}
         return response
 
+    def delete(self):
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        _user = request.args.get("user")
+        _animeid = request.args.get("animeid")
+        sql_command = "delete from anime_lists where user = %s and animeid = %s limit 1"
+        cursor.execute(sql_command, (_user,_animeid))
+        conn.commit()
+        response = {"response text":"entry deleted"}
+        return response
+
         
 
 
 
-class Recommender(Resource):
+class recommender(Resource):
     def get(self):
         conn = mysql.connect()
         cursor = conn.cursor()
@@ -193,10 +203,10 @@ def hello_world():
 
 
 
-api.add_resource(Users,'/users')
-api.add_resource(Recommender,'/rec')
+api.add_resource(users,'/users')
+api.add_resource(recommender,'/rec')
 api.add_resource(user_rate_list, '/rate')
-api.add_resource(Anime,'/anime')
+api.add_resource(anime,'/anime')
 api.add_resource(token, '/token')
 api.add_resource(logout, '/logout')
 api.add_resource(registration, '/registration')

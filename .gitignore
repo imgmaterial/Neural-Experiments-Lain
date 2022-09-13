@@ -1,3 +1,9 @@
 server/mysqlconnect.py
 server/__pycache__/
 .DS_Store
+depricated/
+pyvenv.cfg
+share/
+Scripts/
+Lib/
+Include/

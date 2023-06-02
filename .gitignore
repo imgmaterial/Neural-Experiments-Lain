@@ -7,3 +7,4 @@ share/
 Scripts/
 Lib/
 Include/
+server/anime_ml_model.pkl
